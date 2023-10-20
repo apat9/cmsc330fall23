@@ -27,11 +27,19 @@ let lookahead toks = match toks with
 
 (* Parses a token list. *)
 let rec parser (toks : token list) : expr =
-  failwith "unimplemented"
+  let (t, exp) = parse_S toks in
+  if t <> [Tok_EOF] then
+    raise (Failure "didnt reach end")
+  else
+    exp
 
 (* Parses the S rule. *)
 and parse_S (toks : token list) : (token list * expr) =
-  failwith "unimplemented"
+  let (t, m) = parse_M toks in
+  match lookahead t with
+    Tok_Plus -> let t' = match_token t Tok_Plus in 
+      let (t'', s) = parse_S t' in (t'', Plus (m,s))
+    |_ -> (t,m)
 
 (* Parses the M rule. *)
 and parse_M (toks : token list) : (token list * expr) =
